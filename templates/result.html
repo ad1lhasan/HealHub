@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Analysis Results - Professional Medical Assessment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --secondary-color: #4299e1;
+            --accent-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+            --text-color: #2d3748;
+            --light-bg: #f7fafc;
+            --white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #2b6cb0, #4299e1);
+            --gradient-success: linear-gradient(135deg, #48bb78, #68d391);
+            --gradient-warning: linear-gradient(135deg, #ed8936, #f6ad55);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .result-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .result-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .result-header h2 {
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-body {
+            padding: 2.5rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.4rem;
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 1.6rem;
+        }
+
+        .recommendation-item, .risk-factor-item {
+            background: var(--light-bg);
+            border-radius: 15px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .recommendation-item:hover, .risk-factor-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .recommendation-item i {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            background: rgba(72, 187, 120, 0.1);
+            padding: 0.75rem;
+            border-radius: 12px;
+        }
+
+        .risk-factor-item i {
+            color: var(--warning-color);
+            font-size: 1.4rem;
+            background: rgba(237, 137, 54, 0.1);
+            padding: 0.75rem;
+            border-radius: 12px;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #fff8e1, #fff3e0);
+            border-left: 4px solid var(--warning-color);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 0 15px 15px 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .disclaimer i {
+            color: var(--warning-color);
+            font-size: 1.4rem;
+        }
+
+        .back-button {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: var(--white);
+        }
+
+        .back-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-4px);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .result-body {
+                padding: 1.5rem;
+            }
+
+            .result-header {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Animation for items */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recommendation-item, .risk-factor-item {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .recommendation-item:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .recommendation-item:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .risk-factor-item:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .risk-factor-item:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i>
+                Health Assistant
+            </a>
+                        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h2>Health Analysis Results</h2>
+                            </div>
+                    <div class="result-body">
+                        <!-- Clinical Recommendations -->
+                        <div class="mb-4">
+                            <h3 class="section-title">
+                                <i class="fas fa-clipboard-list"></i>
+                                Clinical Recommendations
+                            </h3>
+                            <div id="recommendations-container">
+                                <!-- Recommendations will be populated here -->
+                            </div>
+                            </div>
+                            
+                        <!-- Risk Factors -->
+                        <div class="mb-4">
+                            <h3 class="section-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Risk Factors
+                            </h3>
+                            <div id="risk-factors-container">
+                                <!-- Risk factors will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Medical Disclaimer -->
+                        <div class="disclaimer">
+                            <i class="fas fa-info-circle me-2"></i>
+                            This analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment.
+                        </div>
+
+                        <!-- Back Button -->
+                        <div class="text-center mt-4">
+                            <a href="/predict" class="btn back-button">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Analysis
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get results from sessionStorage
+            const results = JSON.parse(sessionStorage.getItem('analysisResults') || '{}');
+            
+            // Populate recommendations
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            if (results.recommendations && results.recommendations.length > 0) {
+                results.recommendations.forEach(rec => {
+                    const div = document.createElement('div');
+                    div.className = 'recommendation-item';
+                    div.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>${rec}</span>
+                    `;
+                    recommendationsContainer.appendChild(div);
+                });
+            } else {
+                recommendationsContainer.innerHTML = `
+                    <div class="recommendation-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>No specific recommendations available. Please consult a healthcare provider.</span>
+                        </div>
+                `;
+            }
+
+            // Populate risk factors
+            const riskFactorsContainer = document.getElementById('risk-factors-container');
+            if (results.risk_factors && results.risk_factors.length > 0) {
+                results.risk_factors.forEach(factor => {
+                    const div = document.createElement('div');
+                    div.className = 'risk-factor-item';
+                    div.innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>${factor}</span>
+                    `;
+                    riskFactorsContainer.appendChild(div);
+                });
+            } else {
+                riskFactorsContainer.innerHTML = `
+                    <div class="risk-factor-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>No specific risk factors identified. Please consult a healthcare provider for a complete assessment.</span>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

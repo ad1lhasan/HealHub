@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Chat - Professional Medical Consultation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --secondary-color: #4299e1;
+            --accent-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+            --text-color: #2d3748;
+            --light-bg: #f7fafc;
+            --white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #2b6cb0, #4299e1);
+            --gradient-success: linear-gradient(135deg, #48bb78, #68d391);
+            --gradient-warning: linear-gradient(135deg, #ed8936, #f6ad55);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .chat-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 200px);
+            min-height: 500px;
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .chat-header h2 {
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem;
+            border-radius: 15px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: var(--gradient-primary);
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .assistant-message {
+            background: var(--light-bg);
+            color: var(--text-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .chat-input-container {
+            padding: 1.5rem;
+            background: var(--white);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .chat-input-form {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            outline: none;
+        }
+
+        .send-button {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .send-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .clear-button {
+            background: var(--white);
+            color: var(--danger-color);
+            border: 2px solid var(--danger-color);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .clear-button:hover {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            animation: typing 1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+
+            .chat-card {
+                height: calc(100vh - 150px);
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-header {
+                padding: 1rem;
+            }
+
+            .chat-messages {
+                padding: 1rem;
+            }
+
+            .chat-input-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i>
+                Health Assistant
+            </a>
+        </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <div class="chat-card">
+            <div class="chat-header">
+                <h2>
+                    <i class="fas fa-comments"></i>
+                    Health Consultation
+                </h2>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span>
+                <span></span>
+                <span></span>
+                Assistant is typing...
+            </div>
+            <div class="chat-input-container">
+                <form id="chatForm" class="chat-input-form">
+                    <input type="text" id="messageInput" class="chat-input" 
+                           placeholder="Type your health-related question..." required>
+                    <button type="submit" class="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                        Send
+                    </button>
+                </form>
+                <button class="clear-button" id="clearChat">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear Conversation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chatForm');
+            const messageInput = document.getElementById('messageInput');
+            const chatMessages = document.getElementById('chatMessages');
+            const clearButton = document.getElementById('clearChat');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const sendButton = chatForm.querySelector('.send-button');
+
+            // Generate a unique user ID
+            const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+
+            // Function to add a message to the chat
+            function addMessage(content, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
+                
+                const messageContent = document.createElement('div');
+                messageContent.textContent = content;
+                messageDiv.appendChild(messageContent);
+
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString();
+                messageDiv.appendChild(timeDiv);
+
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to show/hide typing indicator
+            function setTyping(isTyping) {
+                typingIndicator.style.display = isTyping ? 'flex' : 'none';
+                sendButton.disabled = isTyping;
+            }
+
+            // Handle form submission
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = messageInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                addMessage(message, true);
+                messageInput.value = '';
+
+                // Show typing indicator
+                setTyping(true);
+
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            user_id: userId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    
+                    // Add assistant message
+                    addMessage(data.response);
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage('Sorry, I encountered an error. Please try again.');
+                } finally {
+                    setTyping(false);
+                }
+            });
+
+            // Handle clear chat
+            clearButton.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/chat/clear', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user_id: userId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    // Clear chat messages
+                    chatMessages.innerHTML = '';
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error clearing chat history. Please try again.');
+                }
+            });
+
+            // Add welcome message
+            addMessage('Hello! I\'m your health assistant. How can I help you today?');
+        });
+    </script>
+</body>
+</html> 

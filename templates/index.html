@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Assistant - Professional Medical Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --secondary-color: #4299e1;
+            --accent-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+            --text-color: #2d3748;
+            --light-bg: #f7fafc;
+            --white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #2b6cb0, #4299e1);
+            --gradient-success: linear-gradient(135deg, #48bb78, #68d391);
+            --gradient-warning: linear-gradient(135deg, #ed8936, #f6ad55);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+
+        .hero-section {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            font-size: 2rem;
+        }
+
+        .feature-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .cta-button {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: var(--white);
+        }
+
+        .cta-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover i {
+            transform: translateX(4px);
+        }
+
+        .footer {
+            background: var(--white);
+            padding: 3rem 0;
+            margin-top: 4rem;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+        }
+
+        .footer-text {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .feature-card {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Animation for feature cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i>
+                Health Assistant
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="hero-title">Professional Health Analysis</h1>
+                <p class="hero-subtitle">Get expert medical insights and personalized health recommendations</p>
+                <a href="/predict" class="cta-button">
+                    Start Analysis
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                                    </div>
+                                </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container py-5">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3 class="feature-title">Symptom Analysis</h3>
+                    <p class="feature-description">
+                        Get professional analysis of your symptoms with detailed recommendations and risk factors.
+                        Our advanced AI system provides comprehensive health insights.
+                    </p>
+                    <a href="/predict" class="cta-button mt-3">
+                        Analyze Symptoms
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                        </div>
+            <div class="col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="feature-title">Health Chat</h3>
+                    <p class="feature-description">
+                        Chat with our AI health assistant for personalized medical advice and information.
+                        Get instant responses to your health-related questions.
+                    </p>
+                    <a href="/chat" class="cta-button mt-3">
+                        Start Chat
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="footer-text mb-0">© 2024 Health Assistant. All rights reserved.</p>
+    </div>
+    </footer>
+</body>
+</html>

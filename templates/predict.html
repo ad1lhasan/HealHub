@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Analysis - Professional Medical Assessment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --secondary-color: #4299e1;
+            --accent-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+            --text-color: #2d3748;
+            --light-bg: #f7fafc;
+            --white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #2b6cb0, #4299e1);
+            --gradient-success: linear-gradient(135deg, #48bb78, #68d391);
+            --gradient-warning: linear-gradient(135deg, #ed8936, #f6ad55);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .analysis-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .analysis-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .analysis-header h2 {
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .analysis-body {
+            padding: 2.5rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.4rem;
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 1.6rem;
+        }
+
+        .symptom-tag {
+            display: inline-block;
+            background: var(--light-bg);
+            border: 2px solid var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .symptom-tag:hover {
+            background: var(--secondary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .symptom-tag.selected {
+            background: var(--gradient-primary);
+            border-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        .form-label {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .submit-button {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #fff8e1, #fff3e0);
+            border-left: 4px solid var(--warning-color);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 0 15px 15px 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .disclaimer i {
+            color: var(--warning-color);
+            font-size: 1.4rem;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .analysis-body {
+                padding: 1.5rem;
+            }
+
+            .analysis-header {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Animation for form elements */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .analysis-card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i>
+                Health Assistant
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="analysis-card">
+                    <div class="analysis-header">
+                        <h2>Symptom Analysis</h2>
+                    </div>
+                    <div class="analysis-body">
+                        <form id="predictionForm">
+                            <!-- Symptoms Section -->
+                            <div class="mb-4">
+                                <h3 class="section-title">
+                                    <i class="fas fa-notes-medical"></i>
+                                    Select Your Symptoms
+                                </h3>
+                                <div class="symptoms-container">
+                                    <div class="symptom-tag" data-symptom="fever">Fever</div>
+                                    <div class="symptom-tag" data-symptom="cough">Cough</div>
+                                    <div class="symptom-tag" data-symptom="fatigue">Fatigue</div>
+                                    <div class="symptom-tag" data-symptom="headache">Headache</div>
+                                    <div class="symptom-tag" data-symptom="nausea">Nausea</div>
+                                    <div class="symptom-tag" data-symptom="dizziness">Dizziness</div>
+                                    <div class="symptom-tag" data-symptom="chest pain">Chest Pain</div>
+                                    <div class="symptom-tag" data-symptom="shortness of breath">Shortness of Breath</div>
+                                    <div class="symptom-tag" data-symptom="muscle pain">Muscle Pain</div>
+                                    <div class="symptom-tag" data-symptom="sore throat">Sore Throat</div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Symptoms -->
+                            <div class="mb-4">
+                                <label for="customSymptoms" class="form-label">
+                                    <i class="fas fa-plus-circle me-2"></i>
+                                    Additional Symptoms
+                                </label>
+                                <textarea class="form-control" id="customSymptoms" rows="3" 
+                                    placeholder="Enter any additional symptoms, separated by commas"></textarea>
+                            </div>
+
+                            <!-- Medical History -->
+                            <div class="mb-4">
+                                <label for="medicalHistory" class="form-label">
+                                    <i class="fas fa-history me-2"></i>
+                                    Medical History
+                                </label>
+                                <textarea class="form-control" id="medicalHistory" rows="3" 
+                                    placeholder="Enter any relevant medical history or conditions"></textarea>
+                            </div>
+
+                            <!-- Medical Disclaimer -->
+                            <div class="disclaimer">
+                                <i class="fas fa-info-circle me-2"></i>
+                                This analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment.
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="submit-button">
+                                Analyze Symptoms
+                                <i class="fas fa-arrow-right ms-2"></i>
+                                <span class="loading-spinner">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('predictionForm');
+            const submitButton = form.querySelector('.submit-button');
+            const loadingSpinner = form.querySelector('.loading-spinner');
+            const symptomTags = document.querySelectorAll('.symptom-tag');
+            const selectedSymptoms = new Set();
+
+            // Handle symptom tag clicks
+            symptomTags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const symptom = tag.dataset.symptom;
+                    if (tag.classList.contains('selected')) {
+                        tag.classList.remove('selected');
+                        selectedSymptoms.delete(symptom);
+                    } else {
+                        tag.classList.add('selected');
+                        selectedSymptoms.add(symptom);
+                    }
+                });
+            });
+
+            // Handle form submission
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Show loading state
+                submitButton.disabled = true;
+                loadingSpinner.style.display = 'inline-block';
+
+                // Collect form data
+                const formData = new FormData();
+                formData.append('symptoms', Array.from(selectedSymptoms));
+                formData.append('custom_symptoms', document.getElementById('customSymptoms').value);
+                formData.append('medical_history', document.getElementById('medicalHistory').value);
+
+                try {
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    
+                    // Store results in sessionStorage
+                    sessionStorage.setItem('analysisResults', JSON.stringify(data));
+                    
+                    // Redirect to results page
+                    window.location.href = '/result';
+                } catch (error) {
+                    alert('Error analyzing symptoms. Please try again.');
+                    console.error('Error:', error);
+                } finally {
+                    // Reset loading state
+                    submitButton.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
